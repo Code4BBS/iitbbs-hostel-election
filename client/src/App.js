@@ -13,11 +13,7 @@ function App() {
 
   const routing = useRoutes(passProps({ user, updateUser }));
 
-  return (
-    <div className="App">
-      <Container>{routing}</Container>
-    </div>
-  );
+  return <div className="App">{routing}</div>;
 }
 
 export default App;
