@@ -9,7 +9,6 @@ const hostelSchema = new mongoose.Schema({
   voted: [
     {
       type: String,
-      unique: true,
       lowercase: true,
       validate: [validator.isEmail, "Please provide a valid email"],
     },
