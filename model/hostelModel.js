@@ -14,15 +14,50 @@ const hostelSchema = new mongoose.Schema({
       validate: [validator.isEmail, "Please provide a valid email"],
     },
   ],
-  contestants: [
-    {
-      name: { type: String },
-      email: { type: String },
-      position: { type: String },
-      image: { type: String },
-      votes: { type: Number, default: 0 },
-    },
-  ],
+  gsec: {
+    nota: { type: Number, default: 0 },
+    abstain: { type: Number, default: 0 },
+    contestants: [
+      {
+        name: { type: String },
+        email: { type: String },
+        votes: { type: Number, default: 0 },
+      },
+    ],
+  },
+  msec1: {
+    nota: { type: Number, default: 0 },
+    abstain: { type: Number, default: 0 },
+    contestants: [
+      {
+        name: { type: String },
+        email: { type: String },
+        votes: { type: Number, default: 0 },
+      },
+    ],
+  },
+  msec2: {
+    nota: { type: Number, default: 0 },
+    abstain: { type: Number, default: 0 },
+    contestants: [
+      {
+        name: { type: String },
+        email: { type: String },
+        votes: { type: Number, default: 0 },
+      },
+    ],
+  },
+  hsec: {
+    nota: { type: Number, default: 0 },
+    abstain: { type: Number, default: 0 },
+    contestants: [
+      {
+        name: { type: String },
+        email: { type: String },
+        votes: { type: Number, default: 0 },
+      },
+    ],
+  },
 });
 
 const Hostel = mongoose.model("Hostel", hostelSchema);

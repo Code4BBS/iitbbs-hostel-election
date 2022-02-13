@@ -46,24 +46,24 @@ const authCheck = async (hostel, email) => {
   return true;
 };
 
-const upVoteACandidate = (candidates, candidateEmail, candidatePosition) => {
-  const index = candidates.findIndex(
-    (candidate) =>
-      candidate.email === candidateEmail &&
-      candidate.position === candidatePosition
-  );
+// const upVoteACandidate = (candidates, candidateEmail, candidatePosition) => {
+//   const index = candidates.findIndex(
+//     (candidate) =>
+//       candidate.email === candidateEmail &&
+//       candidate.position === candidatePosition
+//   );
 
-  console.log(index);
+//   console.log(index);
 
-  if (index >= 0) {
-    candidates[index].votes = candidates[index].votes + 1;
-  } else {
-    throw new AppError(
-      `Candidate ${candidateEmail} for ${candidatePosition} Not Found`,
-      400
-    );
-  }
-};
+//   if (index >= 0) {
+//     candidates[index].votes = candidates[index].votes + 1;
+//   } else {
+//     throw new AppError(
+//       `Candidate ${candidateEmail} for ${candidatePosition} Not Found`,
+//       400
+//     );
+//   }
+// };
 
 const googleSuccess = catchAsync(async (req, res, next) => {
   const user = req.user;
@@ -86,30 +86,63 @@ const checkEligibility = catchAsync(async (req, res, next) => {
   });
 });
 
+const registerVote = (post, choice) => {
+  if (choice === "NOTA") post.nota = post.nota + 1;
+  else if (choice === "AFV") post.abstain = post.abstain + 1;
+  else {
+    const index = post.contestants.findIndex(
+      (contestant) => contestant.email === choice
+    );
+
+    if (index < 0) {
+      throw new AppError(`Candidate with email ${choice} does not exist`, 400);
+    }
+
+    post.contestants[index].votes = post.contestants[index].votes + 1;
+  }
+};
+
 const vote = catchAsync(async (req, res, next) => {
   const { gsec, msec1, msec2, hsec } = req.body;
   const hostel = config.HOSTEL;
-  
-  const isThereMSec2 = hostel === 'BHR' || hostel === 'MHR';
 
-  // const checkIfAllEntries = 
-  
-  const email = req.user.emails[0].value;
+  const isThereMSec2 = hostel === "BHR" || hostel === "MHR";
+
+  const email = req.user?.email;
   if (!gsec || !msec1 || !hsec || (isThereMSec2 && !msec2))
     return next(
       new AppError("Bad Request, Votes for all posts not present", 400)
     );
+
+  if (isThereMSec2) {
+    if (
+      msec1.includes("@iitbbs.ac.in") &&
+      msec2.includes("@iitbbs.ac.in") &&
+      msec1 === msec2
+    ) {
+      return next(
+        new AppError("Same candidate voted for both mess secretary posts.", 400)
+      );
+    }
+  }
 
   const eligible = await authCheck(hostel, email);
 
   const currHostel = await Hostel.findOne({ hostel: hostel });
 
   currHostel.voted.push(email);
-  const candidates = currHostel.contestants;
 
-  upVoteACandidate(candidates, gsec, "gsec");
-  upVoteACandidate(candidates, msec1, "msec");
-  upVoteACandidate(candidates, hsec, "hsec");
+  // const candidates = currHostel.contestants;
+
+  registerVote(post.gsec, gsec);
+  registerVote(post.msec1, msec1);
+  registerVote(post.hsec, hsec);
+
+  if (isThereMSec2) registerVote(post.msec2, msec2);
+
+  // upVoteACandidate(candidates, gsec, "gsec");
+  // upVoteACandidate(candidates, msec1, "msec");
+  // upVoteACandidate(candidates, hsec, "hsec");
 
   await currHostel.save();
 
@@ -120,9 +153,16 @@ const vote = catchAsync(async (req, res, next) => {
 });
 
 const createHostel = catchAsync(async (req, res, next) => {
-  const { hostel, voted, contestants } = req.body;
+  const { hostel, voted, gsec, msec1, msec2, hsec } = req.body;
 
-  const newHostel = await Hostel.create({ hostel, voted, contestants });
+  const newHostel = await Hostel.create({
+    hostel,
+    voted,
+    gsec,
+    msec1,
+    msec2,
+    hsec,
+  });
 
   if (!newHostel)
     return next(new AppError("Something went wrong creating hostel", 500));
@@ -135,15 +175,15 @@ const createHostel = catchAsync(async (req, res, next) => {
   });
 });
 
-const getWinner = (contestants) => {
-  const winner = contestants.reduce((prev, current) => {
-    return current.votes > prev.votes ? current : prev;
-  });
-  return winner;
-};
+// const getWinner = (contestants) => {
+//   const winner = contestants.reduce((prev, current) => {
+//     return current.votes > prev.votes ? current : prev;
+//   });
+//   return winner;
+// };
 
 const getResults = catchAsync(async (req, res, next) => {
-  const email = req.user?.emails[0].value;
+  const email = req.user?.email;
 
   if (!email || email !== WARDEN_EMAIL) {
     return next(new AppError("You are not allowed to access the results", 401));
@@ -157,32 +197,32 @@ const getResults = catchAsync(async (req, res, next) => {
 
   const currHostel = await Hostel.findOne({ hostel: hostel });
 
-  const contestants = currHostel.contestants;
+  // const contestants = currHostel.contestants;
 
-  const gsecCandidates = [],
-    msecCandidates = [],
-    hsecCandidates = [];
+  // const gsecCandidates = [],
+  //   msecCandidates = [],
+  //   hsecCandidates = [];
 
-  contestants.forEach((contestant) => {
-    // console.log(contestant);
-    if (contestant.position === "gsec") gsecCandidates.push(contestant);
-    else if (contestant.position === "msec") msecCandidates.push(contestant);
-    else hsecCandidates.push(contestant);
-  });
+  // contestants.forEach((contestant) => {
+  //   // console.log(contestant);
+  //   if (contestant.position === "gsec") gsecCandidates.push(contestant);
+  //   else if (contestant.position === "msec") msecCandidates.push(contestant);
+  //   else hsecCandidates.push(contestant);
+  // });
 
-  const results = {
-    hostel,
-    results: {
-      gsec: { winner: getWinner(gsecCandidates), contestants: gsecCandidates },
-      msec: { winner: getWinner(msecCandidates), contestants: msecCandidates },
-      hsec: { winner: getWinner(hsecCandidates), contestants: hsecCandidates },
-    },
-  };
+  // const results = {
+  //   hostel,
+  //   results: {
+  //     gsec: { winner: getWinner(gsecCandidates), contestants: gsecCandidates },
+  //     msec: { winner: getWinner(msecCandidates), contestants: msecCandidates },
+  //     hsec: { winner: getWinner(hsecCandidates), contestants: hsecCandidates },
+  //   },
+  // };
 
   res.status(200).json({
     status: "success",
     message: "Results Fetched successfully",
-    results,
+    hostel: currHostel,
   });
 });
 
