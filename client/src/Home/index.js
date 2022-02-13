@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import data from "../assets/BHR.json";
+import dataHostels from "../assets/data.json";
 
 import { Avatar, Card, Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
@@ -32,6 +32,8 @@ const useStyles = makeStyles({
 });
 
 const Home = ({ user }) => {
+  const data = dataHostels[HOSTEL];
+
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -79,12 +81,9 @@ const Home = ({ user }) => {
     if (!contestants) setContestants(data?.contestants);
   }, [contestants]);
 
-  useEffect(() => {
-    
-  }, [choices]);
+  useEffect(() => {}, [choices]);
 
   const showFullName = (post) => {
-    
     switch (post) {
       case "gsec":
         return "General Secretary";
