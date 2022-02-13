@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import Layout from "./Layout";
 import Home from "./Home";
 import Result from "./Result";
 import Login from "./Login";
@@ -16,12 +17,18 @@ const passProps = ({ user, updateUser }) => {
     ];
   if (user)
     return [
-      { path: "/election", element: <Home user={user} /> },
-      { path: "/result", element: <Result user = {user}/>},
-      { path: "/403", element: <Show403 user={user} /> },
-      { path: "/404", element: <Show404 user={user} /> },
-      { path: "/", element: <Navigate to="/election" /> },
-      { path: "*", element: <Navigate to="/election" /> },
+      {
+        path: "/",
+        element: <Layout user={user} />,
+        children: [
+          { path: "/election", element: <Home user={user} /> },
+          { path: "/result", element: <Result user={user} /> },
+          { path: "/403", element: <Show403 user={user} /> },
+          { path: "/404", element: <Show404 user={user} /> },
+          { path: "/", element: <Navigate to="/election" /> },
+          { path: "*", element: <Navigate to="/election" /> },
+        ],
+      },
     ];
 
   return [
@@ -30,7 +37,7 @@ const passProps = ({ user, updateUser }) => {
     //   element: <Login user={user} updateUser={updateUser} />,
     // },
     { path: "/", element: <Login user={user} updateUser={updateUser} /> },
-    { path: "*", element: <Login user={user} updateUser={updateUser} />},
+    { path: "*", element: <Login user={user} updateUser={updateUser} /> },
   ];
 };
 
