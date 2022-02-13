@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import data from "../BHR.json";
+import data from "../assets/BHR.json";
 
 import { Avatar, Card, Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+
+import { HOSTEL } from "../constants";
 
 const useStyles = makeStyles({
   cntsnt: {
@@ -20,6 +22,11 @@ const useStyles = makeStyles({
       backgroundColor: "blue",
     },
   },
+  image: {
+    "& img": {
+      objectFit: "contain !important",
+    },
+  },
 });
 
 const Home = () => {
@@ -32,8 +39,16 @@ const Home = () => {
   let posts = {};
 
   contestants?.forEach((el) => {
-    if (!posts[el.position]) posts[el.position] = [];
-    posts[el.position].push(el);
+    const positions = [];
+    if (data.double.includes(el.position)) {
+      positions.push(el.position + "1");
+      positions.push(el.position + "2");
+    } else positions.push(el.position);
+
+    positions.forEach((pos) => {
+      if (!posts[pos]) posts[pos] = [];
+      posts[pos].push(el);
+    });
   });
 
   useEffect(() => {
@@ -50,6 +65,10 @@ const Home = () => {
         return "General Secretary";
       case "msec":
         return "Mess Secretary";
+      case "msec1":
+        return "Mess Secretary - 1";
+      case "msec2":
+        return "Mess Secretary - 2";
       case "hsec":
         return "Health and Hygeine Secretary";
       default:
@@ -59,7 +78,7 @@ const Home = () => {
 
   return (
     <div>
-      <Typography variant="h3">BHR ELECTIONS</Typography>
+      <Typography variant="h3">{HOSTEL} ELECTIONS</Typography>
       <div>
         {Object.entries(posts)
           ?.sort((a, b) => a[0] - b[0])
@@ -89,19 +108,48 @@ const Home = () => {
                         <Card
                           className={classes.cntsnt}
                           style={{
+                            width: "120px",
                             backgroundColor:
                               choices[post[0]] === cnt.email
                                 ? "rgb(107, 209, 249,0.4)"
                                 : "inherit",
+                            filter:
+                              post[0] === "msec2" &&
+                              choices["msec1"] === cnt.email
+                                ? "opacity(0.4)"
+                                : "opacity(1)",
                           }}
                           key={"contestant-" + cnt.email}
                           onClick={() => {
-                            setChoices({ ...choices, [post[0]]: cnt.email });
+                            if (
+                              post[0] === "msec2" &&
+                              choices["msec1"] === cnt.email
+                            )
+                              return;
+                            if (
+                              post[0] === "msec1" &&
+                              choices["msec2"] === cnt.email
+                            )
+                              setChoices({
+                                ...choices,
+                                [post[0]]: cnt.email,
+                                msec2: undefined,
+                              });
+                            else
+                              setChoices({ ...choices, [post[0]]: cnt.email });
                           }}
                         >
                           <Avatar
-                            style={{ height: "60px", width: "60px" }}
-                            src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                            style={{
+                              height: "80px",
+                              width: "80px",
+                            }}
+                            className={classes.image}
+                            src={
+                              "/images/" +
+                              cnt.email.split("@iitbbs.ac.in")[0] +
+                              ".jpg"
+                            }
                           />
                           {cnt.name}
                         </Card>
