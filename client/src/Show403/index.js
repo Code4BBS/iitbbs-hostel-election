@@ -2,7 +2,9 @@ import AkshayGIF from "../assets/akshay-kumar-meme.gif";
 const Show403 = () => {
   return (
     <div>
+      <br />
       <h3>Already VOTED</h3>
+      <br />
       <img
         src={AkshayGIF}
         alt="already voted"

@@ -29,7 +29,6 @@ const initializeGoogleSheetsClient = async () => {
 
 const getAllEmails = async () => {
   if (!googleSheets) {
-    console.log("This is not there initializing again");
     await initializeGoogleSheetsClient();
   }
 
@@ -55,10 +54,10 @@ const getAllEmails = async () => {
 const getEmailsOfAHostel = async (hostel) => {
   if (emailsList[hostel].length > 0) return emailsList[hostel];
 
-  console.log("This list does not have any emails");
+
 
   if (!googleSheets) {
-    console.log("This is not there initializing again");
+    
     await initializeGoogleSheetsClient();
   }
 

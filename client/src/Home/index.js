@@ -47,11 +47,13 @@ const Home = ({ user }) => {
         ...choices,
       })
       .then((response) => {
-        console.log(response);
         if (response.status === 200) navigate("/200");
       })
       .catch((error) => {
-        console.log(error);
+        const code = error.response.status;
+
+        if (code === 404 || code === 403) navigate(`${code}`);
+        else window.alert(error.response.data.message);
       });
   };
 
@@ -78,11 +80,11 @@ const Home = ({ user }) => {
   }, [contestants]);
 
   useEffect(() => {
-    console.log({ choices });
+    
   }, [choices]);
 
   const showFullName = (post) => {
-    console.log(post);
+    
     switch (post) {
       case "gsec":
         return "General Secretary";

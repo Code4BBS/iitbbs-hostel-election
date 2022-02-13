@@ -21,7 +21,7 @@ const hasVoted = async (hostel, email) => {
 };
 
 const authCheck = async (hostel, email) => {
-  console.log("Inside authCheck");
+  
 
   if (!email) {
     console.log("Email not found");

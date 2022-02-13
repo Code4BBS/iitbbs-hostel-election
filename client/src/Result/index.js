@@ -13,15 +13,13 @@ const Resultpage = ({ user }) => {
         hostel: HOSTEL,
       })
       .then((response) => {
-        console.log("results");
-        console.log(response.data.hostel);
         setHostelResults({
           gsec: response.data.hostel.gsec,
           hsec: response.data.hostel.hsec,
           msec1: response.data.hostel.msec1,
           msec2: response.data.hostel.msec2,
         });
-        console.log(hostelResults);
+        
       });
     // setHostelResults({
     //     gsec : {

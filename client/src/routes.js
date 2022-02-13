@@ -10,7 +10,6 @@ import Show200 from "./Show200";
 import { WARDEN_EMAIL } from "./constants";
 
 const passProps = ({ user, updateUser }) => {
-  console.log({ user });
   if (user?.email === WARDEN_EMAIL) {
     return [
       {

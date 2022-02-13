@@ -14,7 +14,6 @@ const Login = ({ user, updateUser }) => {
   const [userData, setUserData] = useState(null);
 
   const successResponseGoogle = (res) => {
-    console.log(res);
     const curr = {
       firstName: res.profileObj.givenName,
       lastName: res.profileObj.familyName,
@@ -26,12 +25,12 @@ const Login = ({ user, updateUser }) => {
   };
 
   const failureResponseGoogle = (res) => {
-    console.log(res);
+   
     setIsLoading(false);
   };
 
   const onAutoLoadGoogle = (loggedIn) => {
-    console.log(loggedIn);
+    
     if (!loggedIn) {
       setIsLoading(false);
     }
@@ -42,27 +41,26 @@ const Login = ({ user, updateUser }) => {
     //   getUser(userData.token);
     // }
     if (userData?.token) {
-      console.log("Calling the axios");
+      
       axios
         .post(`${SERVER_URL}/auth/login`, {
           tokenId: userData.token,
           hostel: HOSTEL,
         })
         .then((response) => {
-          console.log(response);
+          
           if (response.status === 200) {
             updateUser(userData);
           }
         })
         .catch((err) => {
-          // setIsLoading(false);
-          console.log(err);
-          console.log(err.response.data);
-          const errorCode = err.response.data.error.statusCode;
+          setIsLoading(false);
+     
+          const errorCode = err.response.status;
           updateUser({ ...userData, errorCode });
         });
     } else {
-      console.log("User Data not present");
+      
       updateUser(userData);
     }
   }, [userData]);
