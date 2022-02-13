@@ -6,6 +6,13 @@ import Show404 from "./Show404";
 
 const passProps = ({ user, updateUser }) => {
   console.log({ user });
+  if (user?.errorCode)
+    return [
+      { path: "/403", element: <Show403 user={user} /> },
+      { path: "/404", element: <Show404 user={user} /> },
+      { path: "/", element: <Navigate to={`/${user.errorCode}`} /> },
+      { path: "*", element: <Navigate to={`/${user.errorCode}`} /> },
+    ];
   if (user)
     return [
       { path: "/election", element: <Home user={user} /> },
