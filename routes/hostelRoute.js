@@ -14,6 +14,6 @@ router.use(authController.verifyToken);
 router.post("/vote", controller.vote);
 
 //route for checking results
-router.get("/results", controller.getResults);
+router.post("/results", controller.getResults);
 
 module.exports = router;
