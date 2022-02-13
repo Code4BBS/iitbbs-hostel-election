@@ -21,7 +21,8 @@ const ResultTable = (props) => {
             votes : abstainVotes
         }
     ].sort((a,b) => b.votes-a.votes);
-      console.log(candidateVotes)
+
+
         return (
         <div>
             <TableContainer component={Paper} style = {{margin : "20px"}}>
