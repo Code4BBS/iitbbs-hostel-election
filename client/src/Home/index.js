@@ -41,6 +41,8 @@ const Home = ({ user }) => {
   const [choices, setChoices] = useState({});
   const [page, setPage] = useState(0);
 
+  const [submitted, setSubmitted] = useState(false);
+
   const vote = () => {
     axios
       .post(`${SERVER_URL}/hostel/vote`, {
@@ -81,7 +83,9 @@ const Home = ({ user }) => {
     if (!contestants) setContestants(data?.contestants);
   }, [contestants]);
 
-  useEffect(() => {}, [choices]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [page]);
 
   const showFullName = (post) => {
     switch (post) {
@@ -270,9 +274,10 @@ const Home = ({ user }) => {
                       color="primary"
                       style={{ position: "absolute", right: "0px" }}
                       onClick={() => {
+                        setSubmitted(true);
                         vote();
                       }}
-                      disabled={!choices[post[0]]}
+                      disabled={!choices[post[0]] || submitted}
                     >
                       SUBMIT
                     </Button>
