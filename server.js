@@ -3,7 +3,10 @@ const http = require("http");
 const app = require("./app");
 const config = require("./utils/config");
 const mongoose = require("mongoose");
-const { initializeGoogleSheetsClient } = require("./config/googleSheetsSetup");
+const {
+  initializeGoogleSheetsClient,
+  getAllEmails,
+} = require("./config/googleSheetsSetup");
 const server = http.createServer(app);
 
 dotenv.config();
@@ -23,7 +26,8 @@ mongoose
     console.log("Starting webserver..");
     server.listen(config.PORT, () => {
       console.log(`Server is running on port ${config.PORT}`);
-      initializeGoogleSheetsClient();
+      // initializeGoogleSheetsClient();
+      getAllEmails();
     });
   })
   .catch((err) => {

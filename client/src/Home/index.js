@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import data from "../assets/BHR.json";
 
 import { Avatar, Card, Button, Typography } from "@mui/material";
@@ -29,12 +30,27 @@ const useStyles = makeStyles({
   },
 });
 
-const Home = () => {
+const Home = ({ user }) => {
   const classes = useStyles();
 
   const [contestants, setContestants] = useState(null);
   const [choices, setChoices] = useState({});
   const [page, setPage] = useState(0);
+
+  const vote = () => {
+    axios
+      .post("http://localhost:3000/hostel/vote", {
+        hostel: HOSTEL,
+        tokenId: user.token,
+        ...choices,
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   let posts = {};
 
@@ -229,8 +245,7 @@ const Home = () => {
                       color="primary"
                       style={{ position: "absolute", right: "0px" }}
                       onClick={() => {
-                        alert("write code to submit");
-                        console.log(choices);
+                        vote();
                       }}
                       disabled={!choices[post[0]]}
                     >

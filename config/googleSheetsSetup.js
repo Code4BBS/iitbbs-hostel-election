@@ -9,6 +9,15 @@ const auth = new Auth.GoogleAuth({
 const spreadsheetId = config.SPREADSHEET_ID;
 
 let googleSheets = null;
+let emailsList = {
+  BHR: [],
+  RHR: [],
+  MHR: [],
+  SHR: [],
+  GHR: [],
+};
+
+const hostelsList = ["BHR", "RHR", "SHR", "GHR", "MHR"];
 
 const initializeGoogleSheetsClient = async () => {
   console.log("initializeGoogleSheetsClient");
@@ -18,10 +27,35 @@ const initializeGoogleSheetsClient = async () => {
   googleSheets = google.sheets({ version: "v4", auth: client });
 };
 
-const getEmailsOfAHostel = async (hostel) => {
-  // const client = await auth.getClient();
+const getAllEmails = async () => {
+  if (!googleSheets) {
+    console.log("This is not there initializing again");
+    await initializeGoogleSheetsClient();
+  }
 
-  // const googleSheets = google.sheets({ version: "v4", auth: client });
+  hostelsList.forEach(async (hostel) => {
+    console.log(hostel);
+
+    const response = await googleSheets.spreadsheets.values.get({
+      auth,
+      spreadsheetId,
+      range: `${hostel}!B:B`,
+    });
+
+    const emails = [];
+
+    for (let i = 1; i < response.data.values.length; ++i) {
+      emails.push(response.data.values[i][0]);
+    }
+
+    emailsList[hostel] = emails;
+  });
+};
+
+const getEmailsOfAHostel = async (hostel) => {
+  if (emailsList[hostel].length > 0) return emailsList[hostel];
+
+  console.log("This list does not have any emails");
 
   if (!googleSheets) {
     console.log("This is not there initializing again");
@@ -40,10 +74,13 @@ const getEmailsOfAHostel = async (hostel) => {
     emails.push(response.data.values[i][0]);
   }
 
-  return emails;
+  emailsList[hostel] = emails;
+
+  return emailsList[hostel];
 };
 
 module.exports = {
   getEmailsOfAHostel,
   initializeGoogleSheetsClient,
+  getAllEmails,
 };
