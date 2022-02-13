@@ -11,8 +11,24 @@ const passProps = ({ user, updateUser }) => {
   console.log({ user });
   if (user?.errorCode)
     return [
-      { path: "/403", element: <Show403 user={user} /> },
-      { path: "/404", element: <Show404 user={user} /> },
+      {
+        path: "/403",
+        element:
+          user?.errorCode === 403 ? (
+            <Show403 user={user} />
+          ) : (
+            <Navigate to={`/${user.errorCode}`} />
+          ),
+      },
+      {
+        path: "/404",
+        element:
+          user?.errorCode === 404 ? (
+            <Show404 user={user} />
+          ) : (
+            <Navigate to={`/${user.errorCode}`} />
+          ),
+      },
       { path: "/", element: <Navigate to={`/${user.errorCode}`} /> },
       { path: "*", element: <Navigate to={`/${user.errorCode}`} /> },
     ];

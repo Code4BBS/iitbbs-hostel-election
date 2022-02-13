@@ -6,6 +6,8 @@ const config = require("../utils/config");
 
 const client = new OAuth2Client(config.CLIENT_ID);
 
+const WARDEN_EMAIL = "warden@iitbbs.ac.in";
+
 const verifyToken = catchAsync(async (req, res, next) => {
   const { tokenId } = req.body;
   if (!tokenId) {

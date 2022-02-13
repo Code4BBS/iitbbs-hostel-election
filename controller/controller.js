@@ -35,7 +35,7 @@ const authCheck = async (hostel, email) => {
   const userBelongsToAHostel = await checkIfUserBelongsToAHostel(hostel, email);
 
   if (!userBelongsToAHostel)
-    throw new AppError("User not found in hostel", 403);
+    throw new AppError("User not found in hostel", 404);
 
   const voted = await hasVoted(hostel, email);
 
