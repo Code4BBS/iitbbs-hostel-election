@@ -31,7 +31,7 @@ const getEmailsOfAHostel = async (hostel) => {
   const response = await googleSheets.spreadsheets.values.get({
     auth,
     spreadsheetId,
-    range: `${hostel}!A:A`,
+    range: `${hostel}!B:B`,
   });
 
   const emails = [];
@@ -43,19 +43,7 @@ const getEmailsOfAHostel = async (hostel) => {
   return emails;
 };
 
-const checkEmailInHostel = async (email) => {
-  try {
-    const hostel = config.HOSTEL;
-    const emails = await getEmailsOfAHostel(hostel);
-    return emails.includes(email);
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-};
-
 module.exports = {
   getEmailsOfAHostel,
-  checkEmailInHostel,
   initializeGoogleSheetsClient,
 };

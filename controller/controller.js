@@ -46,35 +46,6 @@ const authCheck = async (hostel, email) => {
   return true;
 };
 
-// const upVoteACandidate = (candidates, candidateEmail, candidatePosition) => {
-//   const index = candidates.findIndex(
-//     (candidate) =>
-//       candidate.email === candidateEmail &&
-//       candidate.position === candidatePosition
-//   );
-
-//   console.log(index);
-
-//   if (index >= 0) {
-//     candidates[index].votes = candidates[index].votes + 1;
-//   } else {
-//     throw new AppError(
-//       `Candidate ${candidateEmail} for ${candidatePosition} Not Found`,
-//       400
-//     );
-//   }
-// };
-
-const googleSuccess = catchAsync(async (req, res, next) => {
-  const user = req.user;
-
-  if (!user) {
-    return next(new AppError("User not found", 403));
-  }
-
-  res.redirect("/election");
-});
-
 const checkEligibility = catchAsync(async (req, res, next) => {
   const { hostel } = req.body;
   const email = req.user.emails[0].value;
@@ -103,12 +74,11 @@ const registerVote = (post, choice) => {
 };
 
 const vote = catchAsync(async (req, res, next) => {
-  const { gsec, msec1, msec2, hsec } = req.body;
-  const hostel = config.HOSTEL;
+  const { gsec, msec1, msec2, hsec, hostel } = req.body;
+  const email = req.user?.email;
 
   const isThereMSec2 = hostel === "BHR" || hostel === "MHR";
 
-  const email = req.user?.email;
   if (!gsec || !msec1 || !hsec || (isThereMSec2 && !msec2))
     return next(
       new AppError("Bad Request, Votes for all posts not present", 400)
@@ -132,17 +102,11 @@ const vote = catchAsync(async (req, res, next) => {
 
   currHostel.voted.push(email);
 
-  // const candidates = currHostel.contestants;
-
   registerVote(post.gsec, gsec);
   registerVote(post.msec1, msec1);
   registerVote(post.hsec, hsec);
 
   if (isThereMSec2) registerVote(post.msec2, msec2);
-
-  // upVoteACandidate(candidates, gsec, "gsec");
-  // upVoteACandidate(candidates, msec1, "msec");
-  // upVoteACandidate(candidates, hsec, "hsec");
 
   await currHostel.save();
 
@@ -175,13 +139,6 @@ const createHostel = catchAsync(async (req, res, next) => {
   });
 });
 
-// const getWinner = (contestants) => {
-//   const winner = contestants.reduce((prev, current) => {
-//     return current.votes > prev.votes ? current : prev;
-//   });
-//   return winner;
-// };
-
 const getResults = catchAsync(async (req, res, next) => {
   const email = req.user?.email;
 
@@ -197,28 +154,6 @@ const getResults = catchAsync(async (req, res, next) => {
 
   const currHostel = await Hostel.findOne({ hostel: hostel });
 
-  // const contestants = currHostel.contestants;
-
-  // const gsecCandidates = [],
-  //   msecCandidates = [],
-  //   hsecCandidates = [];
-
-  // contestants.forEach((contestant) => {
-  //   // console.log(contestant);
-  //   if (contestant.position === "gsec") gsecCandidates.push(contestant);
-  //   else if (contestant.position === "msec") msecCandidates.push(contestant);
-  //   else hsecCandidates.push(contestant);
-  // });
-
-  // const results = {
-  //   hostel,
-  //   results: {
-  //     gsec: { winner: getWinner(gsecCandidates), contestants: gsecCandidates },
-  //     msec: { winner: getWinner(msecCandidates), contestants: msecCandidates },
-  //     hsec: { winner: getWinner(hsecCandidates), contestants: hsecCandidates },
-  //   },
-  // };
-
   res.status(200).json({
     status: "success",
     message: "Results Fetched successfully",
@@ -227,10 +162,9 @@ const getResults = catchAsync(async (req, res, next) => {
 });
 
 module.exports = {
-  googleSuccess,
   checkEligibility,
   vote,
   createHostel,
   getResults,
-  hasVoted,
+  authCheck,
 };
