@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button, CircularProgress, SvgIcon } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { CLIENT_ID } from "../constants";
+import { CLIENT_ID, HOSTEL } from "../constants";
 
 const Login = ({ user, updateUser }) => {
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const Login = ({ user, updateUser }) => {
       image: res.profileObj.imageUrl,
       token: res.tokenId,
     };
-
     setUserData(curr);
   };
 
@@ -41,7 +40,30 @@ const Login = ({ user, updateUser }) => {
     // if (userData && !userData.phone) {
     //   getUser(userData.token);
     // }
-    updateUser(userData);
+    if (userData?.token) {
+      console.log("Calling the axios");
+      axios
+        .post("http://localhost:3000/auth/login", {
+          tokenId: userData.token,
+          hostel: HOSTEL,
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            updateUser(userData);
+          }
+        })
+        .catch((err) => {
+          // setIsLoading(false);
+          console.log(err);
+          console.log(err.response.data);
+          const errorCode = err.response.data.error.statusCode;
+          updateUser({ ...userData, errorCode });
+        });
+    } else {
+      console.log("User Data not present");
+      updateUser(userData);
+    }
   }, [userData]);
 
   return (

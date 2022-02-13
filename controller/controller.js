@@ -76,6 +76,8 @@ const registerVote = (post, choice) => {
 const vote = catchAsync(async (req, res, next) => {
   const { gsec, msec1, msec2, hsec, hostel } = req.body;
   const email = req.user?.email;
+  // const email = "dsppppp13@iitbbs.ac.in";
+  // const email = req.body.email;
 
   const isThereMSec2 = hostel === "BHR" || hostel === "MHR";
 
@@ -102,11 +104,11 @@ const vote = catchAsync(async (req, res, next) => {
 
   currHostel.voted.push(email);
 
-  registerVote(post.gsec, gsec);
-  registerVote(post.msec1, msec1);
-  registerVote(post.hsec, hsec);
+  registerVote(currHostel.gsec, gsec);
+  registerVote(currHostel.msec1, msec1);
+  registerVote(currHostel.hsec, hsec);
 
-  if (isThereMSec2) registerVote(post.msec2, msec2);
+  if (isThereMSec2) registerVote(currHostel.msec2, msec2);
 
   await currHostel.save();
 
