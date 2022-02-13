@@ -108,30 +108,12 @@ const Resultpage = () => {
                     Object.entries(hostelResults)
                     ?.sort((a,b) => a[0]-b[0])
                     .map((post, index) => {
-                        // return (<div key = {index}>
-                        //     <Card key = {"card" + index} style = {{ margin : "20px"}}>
-                        //         <Typography variant="h6" style={{ marginBottom: "20px" }}>
-                        //             {showFullName(post[0])}
-                        //         </Typography>
-                        //         {
-                        //             post[1].contestants
-                        //             .sort((a,b) => b.votes-a.votes)
-                        //             .map((candidate, index) => {
-                        //                 return (
-                        //                     <p key = {index}> {candidate.name} : {candidate.votes}</p>
-                        //                 )
-                        //             })
-                        //         }
-                        //         <p> NOTA : {post[1].nota}</p>
-                        //         <p> Abstain : {post[1].abstain}</p>
-                        //     </Card>
-                        // </div>)
                         return (
-                        <div>
+                        <div key = {index} style = {{margin : "10px"}}>
                             <Typography variant="h6" style={{ marginBottom: "20px" }}>
                                     {showFullName(post[0])}
                             </Typography>
-                            <ResultTable post = {post[1]}/>
+                            <ResultTable postResults = {post[1]}/>
                         </div>
                         )
                     })
