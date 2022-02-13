@@ -6,7 +6,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const path = require("path");
 const passport = require("passport");
-const session = require("cookie-session");
+// const session = require("cookie-session");
 
 const middleware = require("./utils/middleware");
 const clientEndpoints = ["login", "election", "403", "404"];
@@ -35,16 +35,16 @@ app.use(cookieParser());
 app.use(express.json({ limit: "10kb" }));
 
 //oAuth session
-app.use(
-  session({
-    secret: config.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: false,
-  })
-);
+// app.use(
+//   session({
+//     secret: config.SESSION_SECRET,
+//     resave: true,
+//     saveUninitialized: false,
+//   })
+// );
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use(mongoSanitize());
 
