@@ -3,7 +3,7 @@ const Show403 = () => {
   return (
     <div>
       <br />
-      <h3>Already VOTED</h3>
+      <h3>You have already Voted</h3>
       <br />
       <img
         src={AkshayGIF}

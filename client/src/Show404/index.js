@@ -4,7 +4,7 @@ const Show404 = () => {
   return (
     <div>
       <br />
-      <h3>Does not blong to this hostel</h3>
+      <h3>User not in this hostel</h3>
       <br />
       <img
         src={DontBelong}
