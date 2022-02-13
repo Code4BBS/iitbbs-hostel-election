@@ -1,0 +1,144 @@
+import { useState, useEffect } from "react";
+import { Card, Typography } from "@mui/material";
+import ResultTable from './resultTable.js';
+
+const Resultpage = () => {
+    const [hostelResults, setHostelResults] = useState({});
+    useEffect(() => {
+        setHostelResults({
+            gsec : {
+                nota : 10,
+                abstain : 20,
+                contestants :  [
+                    {
+                        name : "Salman khan",
+                        email : "bigboss@iitbbs.ac.in",
+                        votes : 340
+                    },
+                    {
+                        name : "Shahrukh khan",
+                        email : "loveking@iitbbs.ac.in",
+                        votes : 300
+                    }
+                ]
+            },
+            msec1 : {
+                nota : 20,
+                abstain : 30,
+                contestants :  [
+                    {
+                        name : "Aamir khan",
+                        email : "dangal@iitbbs.ac.in",
+                        votes : 420
+                    },
+                    {
+                        name : "Sher khan",
+                        email : "conqueror@iitbbs.ac.in",
+                        votes : 120
+                    }
+                ]
+            },
+            msec2 : {
+                nota : 5,
+                abstain : 15,
+                contestants :  [
+                    {
+                        name : "Hrithik",
+                        email : "greekgod@iitbbs.ac.in",
+                        votes : 430
+                    },
+                    {
+                        name : "Tiger",
+                        email : "stuntdude@iitbbs.ac.in",
+                        votes : 200
+                    },
+                    {
+                        name : "vidyuth",
+                        email : "electricity@iitbbs.ac.in",
+                        votes : 700
+                    }
+                ]
+            },
+            hsec : {
+                nota : 10,
+                abstain : 25,
+                contestants :  [
+                    {
+                        name : "ranveer",
+                        email : "dragqueen@iitbbs.ac.in",
+                        votes : 200
+                    },
+                    {
+                        name : "ranbir",
+                        email : "sanju@iitbbs.ac.in",
+                        votes : 400
+                    },
+                    {
+                        name : "No offense",
+                        email : "jff@iitbbs.ac.in",
+                        votes : 300
+                    }
+                ]
+            },
+        })
+    }, []);
+
+    const showFullName = (post) => {
+        switch (post) {
+          case "gsec":
+            return "General Secretary";
+          case "msec1":
+            return "Mess Secretary 1";
+          case "msec2":
+            return "Mess Secretary 2";
+          case "hsec":
+            return "Health and Hygeine Secretary";
+          default:
+            return "Post";
+        }
+    };
+
+    return (
+        <div>
+            <Typography variant = 'h3'>
+                BHR ELECTION RESULTS
+            </Typography>
+            <div>
+                {
+                    Object.entries(hostelResults)
+                    ?.sort((a,b) => a[0]-b[0])
+                    .map((post, index) => {
+                        // return (<div key = {index}>
+                        //     <Card key = {"card" + index} style = {{ margin : "20px"}}>
+                        //         <Typography variant="h6" style={{ marginBottom: "20px" }}>
+                        //             {showFullName(post[0])}
+                        //         </Typography>
+                        //         {
+                        //             post[1].contestants
+                        //             .sort((a,b) => b.votes-a.votes)
+                        //             .map((candidate, index) => {
+                        //                 return (
+                        //                     <p key = {index}> {candidate.name} : {candidate.votes}</p>
+                        //                 )
+                        //             })
+                        //         }
+                        //         <p> NOTA : {post[1].nota}</p>
+                        //         <p> Abstain : {post[1].abstain}</p>
+                        //     </Card>
+                        // </div>)
+                        return (
+                        <div>
+                            <Typography variant="h6" style={{ marginBottom: "20px" }}>
+                                    {showFullName(post[0])}
+                            </Typography>
+                            <ResultTable post = {post[1]}/>
+                        </div>
+                        )
+                    })
+                }
+            </div>
+        </div>
+    );
+}
+
+export default Resultpage;
