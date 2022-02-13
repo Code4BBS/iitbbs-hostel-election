@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button, CircularProgress, SvgIcon } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { CLIENT_ID, HOSTEL, SERVER_URL } from "../constants";
+import { CLIENT_ID, HOSTEL, HOSTEL_NAME, SERVER_URL } from "../constants";
 import "./style.css";
 
 const Login = ({ user, updateUser }) => {
@@ -223,7 +223,6 @@ const Login = ({ user, updateUser }) => {
             <h3 style={{ fontSize: "30px", fontWeight: "600" }}>
               Hostel Elections
             </h3>
-            <p style={{ fontStyle: "italic" }}>Some quote on Vote</p>
           </div>
         </div>
       </div>
