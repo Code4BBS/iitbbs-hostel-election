@@ -1,16 +1,14 @@
 const express = require("express");
 const AppError = require("../utils/appError");
 const controller = require("../controller/controller");
+const authController = require("../controller/authController");
 
 const router = express.Router();
 
 // route for creating hostel - remove in production
 router.post("/", controller.createHostel);
 
-router.use((req, res, next) => {
-  if (!req.user) return next(new AppError("You are not logged in", 401));
-  next();
-});
+router.use(authController.verifyToken);
 
 // route for voting the candidates
 router.post("/vote", controller.vote);
