@@ -4,7 +4,7 @@ const AppError = require("../utils/appError");
 const config = require("../utils/config");
 const { getEmailsOfAHostel } = require("../config/googleSheetsSetup");
 
-const WARDEN_EMAIL = "warden@iitbbs.ac.in";
+const WARDEN_EMAIL = config.WARDEN_EMAIL;
 
 const checkIfUserBelongsToAHostel = async (hostel, email) => {
   const emails = await getEmailsOfAHostel(hostel);

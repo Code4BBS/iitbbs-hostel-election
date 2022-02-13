@@ -7,6 +7,7 @@ let CLIENT_ID = process.env.CLIENT_ID;
 let SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 let SESSION_SECRET = process.env.SESSION_SECRET;
 let HOSTEL = process.env.HOSTEL;
+let WARDEN_EMAIL = process.env.WARDEN_EMAIL;
 
 module.exports = {
   PORT,
@@ -16,4 +17,5 @@ module.exports = {
   SPREADSHEET_ID,
   SESSION_SECRET,
   HOSTEL,
+  WARDEN_EMAIL,
 };

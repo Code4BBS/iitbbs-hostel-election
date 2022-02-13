@@ -59,10 +59,9 @@ const Home = ({ user }) => {
 
   contestants?.forEach((el) => {
     const positions = [];
-    if (data.double.includes(el.position)) {
-      positions.push(el.position + "1");
-      positions.push(el.position + "2");
-    } else positions.push(el.position);
+
+    positions.push(el.position + "1");
+    if (data.double.includes(el.position)) positions.push(el.position + "2");
 
     positions.forEach((pos) => {
       if (!posts[pos]) posts[pos] = [];

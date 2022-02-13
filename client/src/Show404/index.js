@@ -3,8 +3,12 @@ import DontBelong from "../assets/you-dont-belong-here-clint-collins.gif";
 const Show404 = () => {
   return (
     <div>
-      <div>Does not blong to this hostel</div>
-      <img src={DontBelong} style={{ maxHeight: "100%", maxWidth: "100%" }} />
+      <h3>Does not blong to this hostel</h3>
+      <img
+        src={DontBelong}
+        alt="not this hostel"
+        style={{ width: "min(500px, 100%)" }}
+      />
     </div>
   );
 };
