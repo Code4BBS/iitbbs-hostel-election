@@ -17,8 +17,8 @@ const passProps = ({ user, updateUser }) => {
         element: <Layout user={user} />,
         children: [
           { path: "results", element: <Result user={user} /> },
-          { path: "/", element: <Navigate to="/results" /> },
-          { path: "*", element: <Navigate to="/results" /> },
+          { path: "/", element: <Navigate to="/results" replace /> },
+          { path: "*", element: <Navigate to="/results" replace /> },
         ],
       },
     ];
@@ -36,7 +36,7 @@ const passProps = ({ user, updateUser }) => {
               user?.errorCode === 403 ? (
                 <Show403 user={user} />
               ) : (
-                <Navigate to={`/${user.errorCode}`} />
+                <Navigate to={`/${user.errorCode}`} replace />
               ),
           },
           {
@@ -45,11 +45,17 @@ const passProps = ({ user, updateUser }) => {
               user?.errorCode === 404 ? (
                 <Show404 user={user} />
               ) : (
-                <Navigate to={`/${user.errorCode}`} />
+                <Navigate to={`/${user.errorCode}`} replace />
               ),
           },
-          { path: "/", element: <Navigate to={`/${user.errorCode}`} /> },
-          { path: "*", element: <Navigate to={`/${user.errorCode}`} /> },
+          {
+            path: "/",
+            element: <Navigate to={`/${user.errorCode}`} replace />,
+          },
+          {
+            path: "*",
+            element: <Navigate to={`/${user.errorCode}`} replace />,
+          },
         ],
       },
     ];
@@ -63,8 +69,8 @@ const passProps = ({ user, updateUser }) => {
           { path: "/403", element: <Show403 user={user} /> },
           { path: "/404", element: <Show404 user={user} /> },
           { path: "/200", element: <Show200 user={user} /> },
-          { path: "/", element: <Navigate to="/election" /> },
-          { path: "*", element: <Navigate to="/election" /> },
+          { path: "/", element: <Navigate to="/election" replace /> },
+          { path: "*", element: <Navigate to="/election" replace /> },
         ],
       },
     ];

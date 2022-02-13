@@ -51,12 +51,13 @@ const Home = ({ user }) => {
         ...choices,
       })
       .then((response) => {
-        if (response.status === 200) navigate("/200");
+        if (response.status === 200) navigate("/200", { replace: true });
       })
       .catch((error) => {
         const code = error.response.status;
 
-        if (code === 404 || code === 403) navigate(`${code}`);
+        if (code === 404 || code === 403)
+          navigate(`/${code}`, { replace: true });
         else window.alert(error.response.data.message);
       });
   };
