@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button, CircularProgress, SvgIcon } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-import { CLIENT_ID, HOSTEL } from "../constants";
+import { CLIENT_ID, HOSTEL, SERVER_URL } from "../constants";
 
 const Login = ({ user, updateUser }) => {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ const Login = ({ user, updateUser }) => {
     if (userData?.token) {
       console.log("Calling the axios");
       axios
-        .post("http://localhost:3000/auth/login", {
+        .post(`${SERVER_URL}/auth/login`, {
           tokenId: userData.token,
           hostel: HOSTEL,
         })

@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import data from "../assets/BHR.json";
 
 import { Avatar, Card, Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 
-import { HOSTEL } from "../constants";
+import { HOSTEL, HOSTEL_NAME, SERVER_URL } from "../constants";
 
 const useStyles = makeStyles({
   cntsnt: {
@@ -32,6 +33,7 @@ const useStyles = makeStyles({
 
 const Home = ({ user }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   const [contestants, setContestants] = useState(null);
   const [choices, setChoices] = useState({});
@@ -39,13 +41,14 @@ const Home = ({ user }) => {
 
   const vote = () => {
     axios
-      .post("http://localhost:3000/hostel/vote", {
+      .post(`${SERVER_URL}/hostel/vote`, {
         hostel: HOSTEL,
         tokenId: user.token,
         ...choices,
       })
       .then((response) => {
         console.log(response);
+        if (response.status === 200) navigate("/200");
       })
       .catch((error) => {
         console.log(error);
@@ -93,8 +96,25 @@ const Home = ({ user }) => {
   };
 
   return (
-    <div>
-      <Typography variant="h3">{HOSTEL} ELECTIONS</Typography>
+    <div style={{ padding: "2%" }}>
+      <Typography
+        variant="h3"
+        style={{
+          marginBottom: "2%",
+          letterSpacing: "3px",
+        }}
+      >
+        Hostel Elections
+      </Typography>
+      <Typography
+        variant="h5"
+        style={{
+          marginBottom: "4%",
+        }}
+      >
+        {HOSTEL_NAME}
+      </Typography>
+
       <div>
         {Object.entries(posts)
           ?.sort((a, b) => a[0] - b[0])
@@ -252,6 +272,8 @@ const Home = ({ user }) => {
                       SUBMIT
                     </Button>
                   )}
+                  <br />
+                  <br />
                 </div>
               </div>
             );

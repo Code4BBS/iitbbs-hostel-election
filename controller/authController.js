@@ -17,8 +17,6 @@ const verifyToken = catchAsync(async (req, res, next) => {
     audience: config.CLIENT_ID,
   });
 
-  console.log(response);
-
   const { email } = response.payload;
 
   req.user = { email: email };
@@ -31,6 +29,14 @@ const googleLogin = catchAsync(async (req, res, next) => {
 
   if (!hostel || !["BHR", "SHR", "RHR", "MHR", "GHR"].includes(hostel)) {
     throw new AppError("No hostel present", 400);
+  }
+
+  if (req.user?.email === WARDEN_EMAIL) {
+    res.status(200).json({
+      status: "success",
+      message: "Warden Logged in, redirecting to Results Page",
+    });
+    return;
   }
 
   const isEligibleToVote = await controller.authCheck(hostel, req.user.email);

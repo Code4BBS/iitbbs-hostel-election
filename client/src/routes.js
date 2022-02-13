@@ -5,6 +5,7 @@ import Result from "./Result";
 import Login from "./Login";
 import Show403 from "./Show403";
 import Show404 from "./Show404";
+import Show200 from "./Show200";
 
 const passProps = ({ user, updateUser }) => {
   console.log({ user });
@@ -25,6 +26,7 @@ const passProps = ({ user, updateUser }) => {
           { path: "/result", element: <Result user={user} /> },
           { path: "/403", element: <Show403 user={user} /> },
           { path: "/404", element: <Show404 user={user} /> },
+          { path: "/200", element: <Show200 user={user} /> },
           { path: "/", element: <Navigate to="/election" /> },
           { path: "*", element: <Navigate to="/election" /> },
         ],
