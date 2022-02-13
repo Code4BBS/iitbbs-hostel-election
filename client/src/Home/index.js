@@ -60,8 +60,12 @@ const Home = ({ user }) => {
   contestants?.forEach((el) => {
     const positions = [];
 
-    positions.push(el.position + "1");
-    if (data.double.includes(el.position)) positions.push(el.position + "2");
+    if (el.position === "msec") positions.push(el.position + 1);
+    else positions.push(el.position);
+
+    if (data.double.includes(el.position)) {
+      positions.push(el.position + "2");
+    }
 
     positions.forEach((pos) => {
       if (!posts[pos]) posts[pos] = [];
@@ -78,6 +82,7 @@ const Home = ({ user }) => {
   }, [choices]);
 
   const showFullName = (post) => {
+    console.log(post);
     switch (post) {
       case "gsec":
         return "General Secretary";
