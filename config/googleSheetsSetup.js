@@ -54,10 +54,7 @@ const getAllEmails = async () => {
 const getEmailsOfAHostel = async (hostel) => {
   if (emailsList[hostel].length > 0) return emailsList[hostel];
 
-
-
   if (!googleSheets) {
-    
     await initializeGoogleSheetsClient();
   }
 
