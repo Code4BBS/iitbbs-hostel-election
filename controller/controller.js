@@ -4,7 +4,14 @@ const AppError = require("../utils/appError");
 const config = require("../utils/config");
 const { getEmailsOfAHostel } = require("../config/googleSheetsSetup");
 
+const BHRData = require("../data/bhr.json");
+const MHRData = require("../data/mhr.json");
+const SHRData = require("../data/shr.json");
+const RHRData = require("../data/rhr.json");
+const GHRData = require("../data/ghr.json");
+
 const WARDEN_EMAIL = config.WARDEN_EMAIL;
+const ADMIN_EMAILS = config.ADMIN_EMAILS;
 
 const checkIfUserBelongsToAHostel = async (hostel, email) => {
   const emails = await getEmailsOfAHostel(hostel);
@@ -21,8 +28,6 @@ const hasVoted = async (hostel, email) => {
 };
 
 const authCheck = async (hostel, email) => {
-  
-
   if (!email) {
     console.log("Email not found");
     throw new AppError("No email present", 401);
@@ -76,8 +81,22 @@ const registerVote = (post, choice) => {
 const vote = catchAsync(async (req, res, next) => {
   const { gsec, msec1, msec2, hsec, hostel } = req.body;
   const email = req.user?.email;
-  // const email = "dsppppp13@iitbbs.ac.in";
-  // const email = req.body.email;
+
+  if (!email) {
+    res.status(400).json({
+      status: "fail",
+      message: "Unable to find email address",
+    });
+    return;
+  }
+
+  if (ADMIN_EMAILS.includes(email)) {
+    res.status(200).json({
+      status: "success",
+      message: "Admin Vote, does not get counted!",
+    });
+    return;
+  }
 
   const isThereMSec2 = hostel === "BHR" || hostel === "MHR";
 
@@ -141,10 +160,28 @@ const createHostel = catchAsync(async (req, res, next) => {
   });
 });
 
+const createFreshDB = catchAsync(async (req, res, next) => {
+  const newHostels = await Hostel.insertMany([
+    BHRData,
+    GHRData,
+    SHRData,
+    MHRData,
+    RHRData,
+  ]);
+
+  console.log(newHostels);
+
+  res.status(201).json({
+    status: "success",
+    message: "Added new hostels",
+    newHostels,
+  });
+});
+
 const getResults = catchAsync(async (req, res, next) => {
   const email = req.user?.email;
 
-  if (!email || email !== WARDEN_EMAIL) {
+  if (!email || !ADMIN_EMAILS.includes(email)) {
     return next(new AppError("You are not allowed to access the results", 401));
   }
 
@@ -169,4 +206,5 @@ module.exports = {
   createHostel,
   getResults,
   authCheck,
+  createFreshDB,
 };

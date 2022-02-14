@@ -6,7 +6,7 @@ const authController = require("../controller/authController");
 const router = express.Router();
 
 // route for creating hostel - remove in production
-router.post("/", controller.createHostel);
+router.post("/", controller.createFreshDB);
 
 router.use(authController.verifyToken);
 

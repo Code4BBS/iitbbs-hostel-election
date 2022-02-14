@@ -7,6 +7,7 @@ const config = require("../utils/config");
 const client = new OAuth2Client(config.CLIENT_ID);
 
 const WARDEN_EMAIL = config.WARDEN_EMAIL;
+const ADMIN_EMAILS = config.ADMIN_EMAILS;
 
 const verifyToken = catchAsync(async (req, res, next) => {
   const { tokenId } = req.body;
@@ -33,10 +34,10 @@ const googleLogin = catchAsync(async (req, res, next) => {
     throw new AppError("No hostel present", 400);
   }
 
-  if (req.user?.email === WARDEN_EMAIL) {
+  if (ADMIN_EMAILS.includes(req.user?.email)) {
     res.status(200).json({
       status: "success",
-      message: "Warden Logged in, redirecting to Results Page",
+      message: "Admin Logged in",
     });
     return;
   }
