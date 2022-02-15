@@ -2,13 +2,16 @@ const Hostel = require("../model/hostelModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const config = require("../utils/config");
-const { getEmailsOfAHostel } = require("../config/googleSheetsSetup");
+const {
+  getEmailsOfAHostel,
+  getAllEmails,
+} = require("../config/googleSheetsSetup");
 
-const BHRData = require("../data/bhr.json");
-const MHRData = require("../data/mhr.json");
-const SHRData = require("../data/shr.json");
-const RHRData = require("../data/rhr.json");
-const GHRData = require("../data/ghr.json");
+// const BHRData = require("../data/bhr.json");
+// const MHRData = require("../data/mhr.json");
+// const SHRData = require("../data/shr.json");
+// const RHRData = require("../data/rhr.json");
+// const GHRData = require("../data/ghr.json");
 
 const WARDEN_EMAIL = config.WARDEN_EMAIL;
 const ADMIN_EMAILS = config.ADMIN_EMAILS;
@@ -160,23 +163,34 @@ const createHostel = catchAsync(async (req, res, next) => {
   });
 });
 
-const createFreshDB = catchAsync(async (req, res, next) => {
-  const newHostels = await Hostel.insertMany([
-    BHRData,
-    GHRData,
-    SHRData,
-    MHRData,
-    RHRData,
-  ]);
+const refreshEmailsData = catchAsync(async (req, res, next) => {
+  await getAllEmails();
 
-  console.log(newHostels);
-
-  res.status(201).json({
+  res.status(200).json({
     status: "success",
-    message: "Added new hostels",
-    newHostels,
+    message: "Emails refreshed successfully",
   });
 });
+
+// const createFreshDB = catchAsync(async (req, res, next) => {
+//   const deleted = await Hostel.deleteMany();
+//   console.log(deleted);
+//   const newHostels = await Hostel.insertMany([
+//     BHRData,
+//     GHRData,
+//     SHRData,
+//     MHRData,
+//     RHRData,
+//   ]);
+
+//   console.log(newHostels);
+
+//   res.status(201).json({
+//     status: "success",
+//     message: "Added new hostels",
+//     newHostels,
+//   });
+// });
 
 const getResults = catchAsync(async (req, res, next) => {
   const email = req.user?.email;
@@ -206,5 +220,6 @@ module.exports = {
   createHostel,
   getResults,
   authCheck,
-  createFreshDB,
+  refreshEmailsData,
+  // createFreshDB,
 };

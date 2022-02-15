@@ -33,8 +33,6 @@ const getAllEmails = async () => {
   }
 
   hostelsList.forEach(async (hostel) => {
-    console.log(hostel);
-
     const response = await googleSheets.spreadsheets.values.get({
       auth,
       spreadsheetId,
@@ -42,6 +40,9 @@ const getAllEmails = async () => {
     });
 
     const emails = [];
+    console.log(
+      `Fetched ${response.data.values.length} entries from ${hostel}`
+    );
 
     for (let i = 1; i < response.data.values.length; ++i) {
       emails.push(response.data.values[i][0]);
