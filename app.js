@@ -17,8 +17,6 @@ const hostelRouter = require("./routes/hostelRoute");
 const app = express();
 
 app.use(helmet());
-
-app.use(limiter);
 app.use(cors());
 app.use(xss());
 app.use(cookieParser());
